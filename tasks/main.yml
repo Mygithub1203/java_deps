@@ -253,7 +253,7 @@
   when: ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 6
 
 - name: list rpm
-  command: find /tmp/zookeeper-package/x86_64/ -iname "zookeeper-*.rpm"
+  command: find /tmp/zookeeper-package/RPMS/x86_64/ -iname "zookeeper-*.rpm"
   register: dumprpm
   when: ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 6
 
