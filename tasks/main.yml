@@ -141,7 +141,7 @@
 
 - name: Add the zookeeper config template
   template:
-    src: "zookeeper.cfg"
+    src: "zookeeper"
     dest: "/etc/zookeeper/zoo.cfg"
     mode: 0644
   become: true
