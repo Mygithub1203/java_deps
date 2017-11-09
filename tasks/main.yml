@@ -106,7 +106,6 @@
   become: true
   with_items:
     - git
-    - cmake
     - "{{ apache_maven_package_name }}"
     - python-setuptools
     - wget
@@ -182,7 +181,6 @@
     - atlas
     - blas
     - lapack
-    - cmake3
     - centos-release-scl
   when: ansible_os_family == 'RedHat'
 
@@ -207,6 +205,27 @@
     backup: yes
   when: ansible_os_family == 'RedHat'
 
+- name: create custom cmake install directory
+  file: path="/opt/cmake" state=directory
+  mode: 0755
+  become: true
+
+- name: download cmake
+  unarchive:
+    src: https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz
+    dest: /opt/
+    remote_src: true
+    validate_certs: no
+  become: true
+
+- name: create cmake symlink
+  file:
+    src: /opt/cmake-3.9.0-Linux-x86_64
+    dest: /opt/cmake
+    state: link
+    force: true
+  become: true
+
 - name: Check /usr/bin/cmake version 2.x is present
   stat: path=/usr/bin/cmake
   register: cmake_stat
@@ -225,13 +244,12 @@
     priority: 50
   when: ansible_os_family == 'RedHat' and cmake_stat.stat.exists
 
-- name: Select RedHat-specific cmake alternative
+- name: Select new cmake alternative
   alternatives:
     name: cmake
     link: /usr/bin/cmake
-    path: /usr/bin/cmake3
+    path: /opt/cmake/bin/cmake
     priority: 100
-  when: ansible_os_family == 'RedHat'
 
 - name: clone zookeeper packaging repo
   git:
