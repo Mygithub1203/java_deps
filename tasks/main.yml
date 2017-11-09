@@ -130,6 +130,7 @@
 - name: Create the systemd service directory, if needed
   file: path="/usr/lib/systemd/system" state=directory
   become: true
+  when: ansible_os_family == 'Debian'
 
 - name: Add the zookeeper service
   template:
@@ -144,6 +145,11 @@
     src: "zookeeper"
     dest: "/etc/zookeeper/zoo.cfg"
     mode: 0644
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Create the sysconfig service directory, if needed
+  file: path="/etc/sysconfig" state=directory
   become: true
   when: ansible_os_family == 'Debian'
 
