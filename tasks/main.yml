@@ -127,6 +127,10 @@
     - "{{ lapack_package_name }}"
   when: ansible_os_family == 'Debian'
 
+- name: Create the systemd service directory, if needed
+  file: path="/usr/lib/systemd/system" state=directory
+  become: true
+
 - name: Add the zookeeper service
   template:
     src: "zookeeper.service"
