@@ -312,3 +312,13 @@
     state: present
   become: true
   with_items: "{{ python_packages }}"
+
+- name: Clean unwanted olderstuff
+  apt:
+    autoremove: yes
+    purge: yes
+  when: ansible_os_family == 'Debian'
+
+- name: cleaning task for yum
+  command: /usr/bin/yum clean all
+  when: ansible_os_family == 'RedHat'
